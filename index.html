@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ הרמת פנים והסרת קמטים</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Heebo', sans-serif;
+        }
+        
+        body {
+            background: #FFF5F7;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            color: #D4A574;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #888;
+            font-size: 1.1em;
+        }
+        
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .main-icon {
+            font-size: 80px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .section-title {
+            text-align: center;
+            color: #D4A574;
+            font-size: 1.3em;
+            margin: 30px 0 15px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 15px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+        
+        .power-button {
+            background: #fff;
+            border: 2px solid #FFB6C1;
+            border-radius: 20px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .power-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255, 182, 193, 0.3);
+            background: #FFF0F3;
+        }
+        
+        .power-button:active {
+            transform: scale(0.98);
+        }
+        
+        .power-button.mint { border-color: #B8E6D4; }
+        .power-button.mint:hover { background: #F0FFF8; }
+        
+        .power-button.gold { border-color: #D4A574; }
+        .power-button.gold:hover { background: #FFFAF5; }
+        
+        .button-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .button-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .button-desc {
+            font-size: 0.85em;
+            color: #888;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #FFF5F7;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .overlay.active {
+            display: flex;
+        }
+        
+        .overlay-content {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .close-overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #FFB6C1;
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .animation-icon {
+            font-size: 80px;
+            margin-bottom: 30px;
+        }
+        
+        .animation-text {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            min-height: 60px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #FFE4EC;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            background: #FFB6C1;
+        }
+        
+        .completion-message {
+            display: none;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #B8E6D4;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .install-btn {
+            background: #FFB6C1;
+            border: none;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .install-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 182, 193, 0.5);
+        }
+        
+        .install-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✨ הרמת פנים והסרת קמטים</h1>
+        <p>מתיחה, הסרת קמטים והוספת שיער</p>
+    </div>
+    
+    <div class="icon-container">
+        <span class="main-icon">👸</span>
+    </div>
+    
+    <div class="section-title">👁️ אזור העיניים</div>
+    <div class="buttons-grid">
+        <div class="power-button" onclick="startProcess('eyelids')">
+            <span class="button-icon">👁️</span>
+            <div class="button-title">הרמת עפעפיים</div>
+            <div class="button-desc">הרמה ומתיחה</div>
+        </div>
+        <div class="power-button mint" onclick="startProcess('underEyes')">
+            <span class="button-icon">👀</span>
+            <div class="button-title">קמטים מתחת לעיניים</div>
+            <div class="button-desc">הסרת קמטים</div>
+        </div>
+        <div class="power-button gold" onclick="startProcess('crowsFeet')">
+            <span class="button-icon">✨</span>
+            <div class="button-title">קמטים בצידי העיניים</div>
+            <div class="button-desc">הסרת רגלי עורב</div>
+        </div>
+        <div class="power-button" onclick="startProcess('betweenBrows')">
+            <span class="button-icon">😤</span>
+            <div class="button-title">קמטים בין הגבות</div>
+            <div class="button-desc">הסרת קמט הכעס</div>
+        </div>
+    </div>
+    
+    <div class="section-title">😊 אזור הפנים</div>
+    <div class="buttons-grid">
+        <div class="power-button mint" onclick="startProcess('forehead')">
+            <span class="button-icon">🧠</span>
+            <div class="button-title">קמטים במצח</div>
+            <div class="button-desc">החלקת המצח</div>
+        </div>
+        <div class="power-button gold" onclick="startProcess('mouthSides')">
+            <span class="button-icon">😊</span>
+            <div class="button-title">קמטים בצידי הפה</div>
+            <div class="button-desc">הסרת קמטי חיוך</div>
+        </div>
+        <div class="power-button" onclick="startProcess('faceRight')">
+            <span class="button-icon">➡️</span>
+            <div class="button-title">מתיחת פנים ימין</div>
+            <div class="button-desc">הרמת צד ימין</div>
+        </div>
+        <div class="power-button mint" onclick="startProcess('faceLeft')">
+            <span class="button-icon">⬅️</span>
+            <div class="button-title">מתיחת פנים שמאל</div>
+            <div class="button-desc">הרמת צד שמאל</div>
+        </div>
+    </div>
+    
+    <div class="section-title">🦢 אזור הצוואר</div>
+    <div class="buttons-grid">
+        <div class="power-button gold" onclick="startProcess('neckWrinkles')">
+            <span class="button-icon">🦢</span>
+            <div class="button-title">קמטים בצוואר</div>
+            <div class="button-desc">הסרת קמטי צוואר</div>
+        </div>
+        <div class="power-button" onclick="startProcess('neckLift')">
+            <span class="button-icon">💫</span>
+            <div class="button-title">מתיחת צוואר</div>
+            <div class="button-desc">הרמה והידוק</div>
+        </div>
+    </div>
+    
+    <div class="section-title">💇 שיער וגבות</div>
+    <div class="buttons-grid">
+        <div class="power-button mint" onclick="startProcess('eyebrows')">
+            <span class="button-icon">🥸</span>
+            <div class="button-title">מילוי גבות</div>
+            <div class="button-desc">מילוי זקיקי שיער</div>
+        </div>
+        <div class="power-button gold" onclick="startProcess('hair')">
+            <span class="button-icon">💇‍♀️</span>
+            <div class="button-title">הוספת שיער</div>
+            <div class="button-desc">הוספת זקיקים לראש</div>
+        </div>
+    </div>
+
+    <!-- Eyelids Overlay -->
+    <div class="overlay" id="eyelidsOverlay">
+        <button class="close-overlay" onclick="closeOverlay('eyelids')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="eyelidsIcon">👁️</div>
+            <div class="animation-text" id="eyelidsText">מתחילה הרמת עפעפיים...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="eyelidsProgress"></div>
+            </div>
+            <button class="install-btn" id="eyelidsBtn" onclick="runProcess('eyelids')">✨ התחילי הרמה</button>
+            <div class="completion-message" id="eyelidsComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ העפעפיים הורמו!</p>
+                <p style="color: #666;">מבט פתוח וצעיר.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Under Eyes Overlay -->
+    <div class="overlay" id="underEyesOverlay">
+        <button class="close-overlay" onclick="closeOverlay('underEyes')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="underEyesIcon">👀</div>
+            <div class="animation-text" id="underEyesText">מתחילה הסרת קמטים מתחת לעיניים...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="underEyesProgress"></div>
+            </div>
+            <button class="install-btn" id="underEyesBtn" onclick="runProcess('underEyes')">✨ התחילי הסרה</button>
+            <div class="completion-message" id="underEyesComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ הקמטים הוסרו!</p>
+                <p style="color: #666;">עור חלק מתחת לעיניים.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crow's Feet Overlay -->
+    <div class="overlay" id="crowsFeetOverlay">
+        <button class="close-overlay" onclick="closeOverlay('crowsFeet')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="crowsFeetIcon">✨</div>
+            <div class="animation-text" id="crowsFeetText">מתחילה הסרת קמטים בצידי העיניים...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="crowsFeetProgress"></div>
+            </div>
+            <button class="install-btn" id="crowsFeetBtn" onclick="runProcess('crowsFeet')">✨ התחילי הסרה</button>
+            <div class="completion-message" id="crowsFeetComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ רגלי העורב הוסרו!</p>
+                <p style="color: #666;">עור חלק בצידי העיניים.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Between Brows Overlay -->
+    <div class="overlay" id="betweenBrowsOverlay">
+        <button class="close-overlay" onclick="closeOverlay('betweenBrows')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="betweenBrowsIcon">😤</div>
+            <div class="animation-text" id="betweenBrowsText">מתחילה הסרת קמטים בין הגבות...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="betweenBrowsProgress"></div>
+            </div>
+            <button class="install-btn" id="betweenBrowsBtn" onclick="runProcess('betweenBrows')">✨ התחילי הסרה</button>
+            <div class="completion-message" id="betweenBrowsComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ קמט הכעס הוסר!</p>
+                <p style="color: #666;">מצח חלק ורגוע.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forehead Overlay -->
+    <div class="overlay" id="foreheadOverlay">
+        <button class="close-overlay" onclick="closeOverlay('forehead')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="foreheadIcon">🧠</div>
+            <div class="animation-text" id="foreheadText">מתחילה הסרת קמטים במצח...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="foreheadProgress"></div>
+            </div>
+            <button class="install-btn" id="foreheadBtn" onclick="runProcess('forehead')">✨ התחילי הסרה</button>
+            <div class="completion-message" id="foreheadComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ קמטי המצח הוסרו!</p>
+                <p style="color: #666;">מצח חלק וצעיר.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mouth Sides Overlay -->
+    <div class="overlay" id="mouthSidesOverlay">
+        <button class="close-overlay" onclick="closeOverlay('mouthSides')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="mouthSidesIcon">😊</div>
+            <div class="animation-text" id="mouthSidesText">מתחילה הסרת קמטים בצידי הפה...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="mouthSidesProgress"></div>
+            </div>
+            <button class="install-btn" id="mouthSidesBtn" onclick="runProcess('mouthSides')">✨ התחילי הסרה</button>
+            <div class="completion-message" id="mouthSidesComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ קמטי החיוך הוסרו!</p>
+                <p style="color: #666;">עור חלק סביב הפה.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Face Right Overlay -->
+    <div class="overlay" id="faceRightOverlay">
+        <button class="close-overlay" onclick="closeOverlay('faceRight')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="faceRightIcon">➡️</div>
+            <div class="animation-text" id="faceRightText">מתחילה מתיחת פנים צד ימין...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="faceRightProgress"></div>
+            </div>
+            <button class="install-btn" id="faceRightBtn" onclick="runProcess('faceRight')">✨ התחילי מתיחה</button>
+            <div class="completion-message" id="faceRightComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ צד ימין הורם!</p>
+                <p style="color: #666;">פנים מורמות ומתוחות.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Face Left Overlay -->
+    <div class="overlay" id="faceLeftOverlay">
+        <button class="close-overlay" onclick="closeOverlay('faceLeft')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="faceLeftIcon">⬅️</div>
+            <div class="animation-text" id="faceLeftText">מתחילה מתיחת פנים צד שמאל...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="faceLeftProgress"></div>
+            </div>
+            <button class="install-btn" id="faceLeftBtn" onclick="runProcess('faceLeft')">✨ התחילי מתיחה</button>
+            <div class="completion-message" id="faceLeftComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ צד שמאל הורם!</p>
+                <p style="color: #666;">פנים מורמות ומתוחות.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Neck Wrinkles Overlay -->
+    <div class="overlay" id="neckWrinklesOverlay">
+        <button class="close-overlay" onclick="closeOverlay('neckWrinkles')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="neckWrinklesIcon">🦢</div>
+            <div class="animation-text" id="neckWrinklesText">מתחילה הסרת קמטים בצוואר...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="neckWrinklesProgress"></div>
+            </div>
+            <button class="install-btn" id="neckWrinklesBtn" onclick="runProcess('neckWrinkles')">✨ התחילי הסרה</button>
+            <div class="completion-message" id="neckWrinklesComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ קמטי הצוואר הוסרו!</p>
+                <p style="color: #666;">צוואר חלק וצעיר.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Neck Lift Overlay -->
+    <div class="overlay" id="neckLiftOverlay">
+        <button class="close-overlay" onclick="closeOverlay('neckLift')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="neckLiftIcon">💫</div>
+            <div class="animation-text" id="neckLiftText">מתחילה מתיחת צוואר...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="neckLiftProgress"></div>
+            </div>
+            <button class="install-btn" id="neckLiftBtn" onclick="runProcess('neckLift')">✨ התחילי מתיחה</button>
+            <div class="completion-message" id="neckLiftComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ הצוואר הורם!</p>
+                <p style="color: #666;">צוואר מתוח ואלגנטי.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Eyebrows Overlay -->
+    <div class="overlay" id="eyebrowsOverlay">
+        <button class="close-overlay" onclick="closeOverlay('eyebrows')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="eyebrowsIcon">🥸</div>
+            <div class="animation-text" id="eyebrowsText">מתחילה מילוי זקיקי שיער בגבות...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="eyebrowsProgress"></div>
+            </div>
+            <button class="install-btn" id="eyebrowsBtn" onclick="runProcess('eyebrows')">✨ התחילי מילוי</button>
+            <div class="completion-message" id="eyebrowsComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ הגבות התמלאו!</p>
+                <p style="color: #666;">גבות מלאות ויפות.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hair Overlay -->
+    <div class="overlay" id="hairOverlay">
+        <button class="close-overlay" onclick="closeOverlay('hair')">✕</button>
+        <div class="overlay-content">
+            <div class="animation-icon" id="hairIcon">💇‍♀️</div>
+            <div class="animation-text" id="hairText">מתחילה הוספת זקיקי שיער...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="hairProgress"></div>
+            </div>
+            <button class="install-btn" id="hairBtn" onclick="runProcess('hair')">✨ התחילי הוספה</button>
+            <div class="completion-message" id="hairComplete">
+                <p style="font-size: 1.3em; margin-bottom: 10px; color: #D4A574;">✅ זקיקי השיער נוספו!</p>
+                <p style="color: #666;">שיער מלא ובריא.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const processStages = {
+            eyelids: [
+                { percent: 10, text: '👁️ סורקת את אזור העפעפיים...', icon: '👁️' },
+                { percent: 20, text: '🔍 מזהה עור עודף...', icon: '🔍' },
+                { percent: 30, text: '✨ מתחילה הרמה...', icon: '✨' },
+                { percent: 40, text: '💪 מחזקת את השרירים...', icon: '💪' },
+                { percent: 50, text: '🌸 מותחת את העור...', icon: '🌸' },
+                { percent: 60, text: '💎 מגדירה את הקפל...', icon: '💎' },
+                { percent: 70, text: '🌟 מרימה את העפעף...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את הרקמות...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההרמה...', icon: '✨' },
+                { percent: 100, text: '✅ העפעפיים הורמו!', icon: '👁️' }
+            ],
+            underEyes: [
+                { percent: 10, text: '👀 סורקת את האזור מתחת לעיניים...', icon: '👀' },
+                { percent: 20, text: '🔍 מזהה קמטים ועומק...', icon: '🔍' },
+                { percent: 30, text: '✨ מתחילה מילוי...', icon: '✨' },
+                { percent: 40, text: '💧 מזריקה לחות עמוקה...', icon: '💧' },
+                { percent: 50, text: '🌸 מחליקה את הקמטים...', icon: '🌸' },
+                { percent: 60, text: '💎 ממלאה את החללים...', icon: '💎' },
+                { percent: 70, text: '🌟 מבהירה את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את הרקמות...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההחלקה...', icon: '✨' },
+                { percent: 100, text: '✅ הקמטים מתחת לעיניים הוסרו!', icon: '👀' }
+            ],
+            crowsFeet: [
+                { percent: 10, text: '✨ סורקת את צידי העיניים...', icon: '✨' },
+                { percent: 20, text: '🔍 מזהה רגלי עורב...', icon: '🔍' },
+                { percent: 30, text: '💧 מזריקה מרכיבים פעילים...', icon: '💧' },
+                { percent: 40, text: '🌸 מרפה את השרירים...', icon: '🌸' },
+                { percent: 50, text: '✨ מחליקה את הקמטים...', icon: '✨' },
+                { percent: 60, text: '💎 ממלאה קווים דקים...', icon: '💎' },
+                { percent: 70, text: '🌟 מחדשת את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את האזור...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההחלקה...', icon: '✨' },
+                { percent: 100, text: '✅ רגלי העורב הוסרו!', icon: '✨' }
+            ],
+            betweenBrows: [
+                { percent: 10, text: '😤 סורקת את האזור בין הגבות...', icon: '😤' },
+                { percent: 20, text: '🔍 מזהה את קמט הכעס...', icon: '🔍' },
+                { percent: 30, text: '💧 מזריקה מרכיבים פעילים...', icon: '💧' },
+                { percent: 40, text: '🌸 מרפה את השריר...', icon: '🌸' },
+                { percent: 50, text: '✨ מחליקה את הקמט...', icon: '✨' },
+                { percent: 60, text: '💎 ממלאה את החריץ...', icon: '💎' },
+                { percent: 70, text: '🌟 מחדשת את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את האזור...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההחלקה...', icon: '✨' },
+                { percent: 100, text: '✅ קמט הכעס הוסר!', icon: '😊' }
+            ],
+            forehead: [
+                { percent: 10, text: '🧠 סורקת את אזור המצח...', icon: '🧠' },
+                { percent: 20, text: '🔍 מזהה קמטים אופקיים...', icon: '🔍' },
+                { percent: 30, text: '💧 מזריקה מרכיבים פעילים...', icon: '💧' },
+                { percent: 40, text: '🌸 מרפה את השרירים...', icon: '🌸' },
+                { percent: 50, text: '✨ מחליקה את הקמטים...', icon: '✨' },
+                { percent: 60, text: '💎 ממלאה את הקווים...', icon: '💎' },
+                { percent: 70, text: '🌟 מחדשת את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את המצח...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההחלקה...', icon: '✨' },
+                { percent: 100, text: '✅ קמטי המצח הוסרו!', icon: '🧠' }
+            ],
+            mouthSides: [
+                { percent: 10, text: '😊 סורקת את צידי הפה...', icon: '😊' },
+                { percent: 20, text: '🔍 מזהה קמטי חיוך...', icon: '🔍' },
+                { percent: 30, text: '💧 מזריקה מרכיבים פעילים...', icon: '💧' },
+                { percent: 40, text: '🌸 מרפה את השרירים...', icon: '🌸' },
+                { percent: 50, text: '✨ מחליקה את הקמטים...', icon: '✨' },
+                { percent: 60, text: '💎 ממלאה את הקווים...', icon: '💎' },
+                { percent: 70, text: '🌟 מחדשת את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את האזור...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההחלקה...', icon: '✨' },
+                { percent: 100, text: '✅ קמטי החיוך הוסרו!', icon: '😊' }
+            ],
+            faceRight: [
+                { percent: 10, text: '➡️ סורקת את צד ימין של הפנים...', icon: '➡️' },
+                { percent: 20, text: '🔍 מזהה אזורים לטיפול...', icon: '🔍' },
+                { percent: 30, text: '✨ מתחילה מתיחה...', icon: '✨' },
+                { percent: 40, text: '💪 מחזקת את הרקמות...', icon: '💪' },
+                { percent: 50, text: '🌸 מרימה את הלחי...', icon: '🌸' },
+                { percent: 60, text: '💎 מגדירה את קו הלסת...', icon: '💎' },
+                { percent: 70, text: '🌟 מותחת את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את הרקמות...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההרמה...', icon: '✨' },
+                { percent: 100, text: '✅ צד ימין של הפנים הורם!', icon: '➡️' }
+            ],
+            faceLeft: [
+                { percent: 10, text: '⬅️ סורקת את צד שמאל של הפנים...', icon: '⬅️' },
+                { percent: 20, text: '🔍 מזהה אזורים לטיפול...', icon: '🔍' },
+                { percent: 30, text: '✨ מתחילה מתיחה...', icon: '✨' },
+                { percent: 40, text: '💪 מחזקת את הרקמות...', icon: '💪' },
+                { percent: 50, text: '🌸 מרימה את הלחי...', icon: '🌸' },
+                { percent: 60, text: '💎 מגדירה את קו הלסת...', icon: '💎' },
+                { percent: 70, text: '🌟 מותחת את העור...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את הרקמות...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההרמה...', icon: '✨' },
+                { percent: 100, text: '✅ צד שמאל של הפנים הורם!', icon: '⬅️' }
+            ],
+            neckWrinkles: [
+                { percent: 10, text: '🦢 סורקת את אזור הצוואר...', icon: '🦢' },
+                { percent: 20, text: '🔍 מזהה קמטים וקווים...', icon: '🔍' },
+                { percent: 30, text: '💧 מזריקה מרכיבים פעילים...', icon: '💧' },
+                { percent: 40, text: '🌸 מחליקה את הקמטים...', icon: '🌸' },
+                { percent: 50, text: '✨ ממלאה את הקווים...', icon: '✨' },
+                { percent: 60, text: '💎 מחדשת את העור...', icon: '💎' },
+                { percent: 70, text: '🌟 מייצרת קולגן חדש...', icon: '🌟' },
+                { percent: 80, text: '💗 מהדקת את הרקמות...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההחלקה...', icon: '✨' },
+                { percent: 100, text: '✅ קמטי הצוואר הוסרו!', icon: '🦢' }
+            ],
+            neckLift: [
+                { percent: 10, text: '💫 סורקת את הצוואר...', icon: '💫' },
+                { percent: 20, text: '🔍 מזהה עור רפוי...', icon: '🔍' },
+                { percent: 30, text: '✨ מתחילה מתיחה...', icon: '✨' },
+                { percent: 40, text: '💪 מחזקת את השרירים...', icon: '💪' },
+                { percent: 50, text: '🌸 מרימה את העור...', icon: '🌸' },
+                { percent: 60, text: '💎 מגדירה את קו הצוואר...', icon: '💎' },
+                { percent: 70, text: '🌟 מהדקת את הרקמות...', icon: '🌟' },
+                { percent: 80, text: '💗 משפרת את הצורה...', icon: '💗' },
+                { percent: 90, text: '✨ משלימה את ההרמה...', icon: '✨' },
+                { percent: 100, text: '✅ הצוואר הורם!', icon: '💫' }
+            ],
+            eyebrows: [
+                { percent: 10, text: '🥸 סורקת את הגבות...', icon: '🥸' },
+                { percent: 20, text: '🔍 מזהה אזורים דלילים...', icon: '🔍' },
+                { percent: 30, text: '✨ מכינה את האזור...', icon: '✨' },
+                { percent: 40, text: '🌱 משתילה זקיקי שיער...', icon: '🌱' },
+                { percent: 50, text: '💧 מזינה את הזקיקים...', icon: '💧' },
+                { percent: 60, text: '🌸 מחזקת את השורשים...', icon: '🌸' },
+                { percent: 70, text: '💎 מעצבת את הצורה...', icon: '💎' },
+                { percent: 80, text: '🌟 ממלאה חללים...', icon: '🌟' },
+                { percent: 90, text: '💗 משלימה את המילוי...', icon: '💗' },
+                { percent: 100, text: '✅ הגבות התמלאו!', icon: '🥸' }
+            ],
+            hair: [
+                { percent: 10, text: '💇‍♀️ סורקת את הקרקפת...', icon: '💇‍♀️' },
+                { percent: 20, text: '🔍 מזהה אזורים דלילים...', icon: '🔍' },
+                { percent: 30, text: '✨ מכינה את הזקיקים...', icon: '✨' },
+                { percent: 40, text: '🌱 משתילה זקיקים חדשים...', icon: '🌱' },
+                { percent: 50, text: '💧 מזינה את השורשים...', icon: '💧' },
+                { percent: 60, text: '🌸 מעוררת צמיחה...', icon: '🌸' },
+                { percent: 70, text: '💎 מחזקת את השיער...', icon: '💎' },
+                { percent: 80, text: '🌟 מוסיפה נפח...', icon: '🌟' },
+                { percent: 90, text: '💗 משלימה את ההוספה...', icon: '💗' },
+                { percent: 100, text: '✅ זקיקי השיער נוספו!', icon: '💇‍♀️' }
+            ]
+        };
+        
+        function startProcess(type) {
+            document.getElementById(type + 'Overlay').classList.add('active');
+            document.getElementById(type + 'Progress').style.width = '0%';
+            document.getElementById(type + 'Complete').classList.remove('show');
+            document.getElementById(type + 'Btn').disabled = false;
+            
+            const btnTexts = {
+                eyelids: '✨ התחילי הרמה',
+                underEyes: '✨ התחילי הסרה',
+                crowsFeet: '✨ התחילי הסרה',
+                betweenBrows: '✨ התחילי הסרה',
+                forehead: '✨ התחילי הסרה',
+                mouthSides: '✨ התחילי הסרה',
+                faceRight: '✨ התחילי מתיחה',
+                faceLeft: '✨ התחילי מתיחה',
+                neckWrinkles: '✨ התחילי הסרה',
+                neckLift: '✨ התחילי מתיחה',
+                eyebrows: '✨ התחילי מילוי',
+                hair: '✨ התחילי הוספה'
+            };
+            document.getElementById(type + 'Btn').textContent = btnTexts[type];
+        }
+        
+        function closeOverlay(type) {
+            document.getElementById(type + 'Overlay').classList.remove('active');
+        }
+        
+        function runProcess(type) {
+            const btn = document.getElementById(type + 'Btn');
+            const progress = document.getElementById(type + 'Progress');
+            const text = document.getElementById(type + 'Text');
+            const icon = document.getElementById(type + 'Icon');
+            const stages = processStages[type];
+            
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '⏳ בתהליך...';
+            
+            let stage = 0;
+            const interval = setInterval(() => {
+                if (stage < stages.length) {
+                    progress.style.width = stages[stage].percent + '%';
+                    text.textContent = stages[stage].text;
+                    icon.textContent = stages[stage].icon;
+                    stage++;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById(type + 'Complete').classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
